@@ -206,4 +206,11 @@ public class DBManager {
         }
         return list;
     }
+    /**
+     * 删除accounttb表格当中的所有数据
+     */
+    public static void deleteAllAccount(){
+        String sql = "delete from accounttb";
+        db.execSQL(sql);
+    }
 }

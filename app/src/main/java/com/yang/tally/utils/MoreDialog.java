@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import com.yang.tally.AboutActivity;
 import com.yang.tally.HistoryActivity;
 import com.yang.tally.R;
+import com.yang.tally.SettingActivity;
 
 public class MoreDialog extends Dialog implements View.OnClickListener {
     Button aboutBtn,settingBtn,historyBtn,infoBtn;
@@ -54,6 +55,8 @@ public class MoreDialog extends Dialog implements View.OnClickListener {
                 getContext().startActivity(intent);
                 break;
             case R.id.dialog_more_btn_setting:
+                intent.setClass(getContext(), SettingActivity.class);
+                getContext().startActivity(intent);
                 break;
             case R.id.dialog_more_btn_record:
                 intent.setClass(getContext(), HistoryActivity.class);

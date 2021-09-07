@@ -35,7 +35,9 @@
     <string name="about_codeinfo">我的代码就不给你，略略略</string>
     <string name="about_B">B站地址</string>
     <string name="about_B2">我的个人bilibili主页地址为https://space.bilibili.com/19044570</string>
-<string name="history_info">本月账单记录</string>
+    <string name="history_info">本月账单记录</string>
+    <string name="clear_all">清空所有记录</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
