@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static java.security.AccessController.getContext;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     ListView todayLv;//展示今日收支情况的ListView;
@@ -221,6 +223,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (v == headerView){
             //头布局被点击
+            Intent intent = new Intent();
+            intent.setClass(this, MonthChartActivity.class);
+            startActivity(intent);
         }
 
     }

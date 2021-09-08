@@ -2,7 +2,13 @@
     <string name="app_name">来记账吧</string>
     <string name="editone">记一笔</string>
     <string name="month_out">本月支出</string>
+    <string name="out">支出</string>
+
     <string name="month_in">本月收入</string>
+    <string name="in">收入</string>
+    <string name="not_data">暂无数据</string>
+
+
     <string name="budget">预算剩余</string>
     <string name="set_budget">设置预算</string>
 

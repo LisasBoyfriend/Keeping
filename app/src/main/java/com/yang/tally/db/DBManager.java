@@ -121,7 +121,20 @@ public class DBManager {
 
         return total;
     }
+    /**
+     * 统计某月份支出或者收入情况有多少条  收入-1，支出-0
+     */
 
+    public static int getCountItemOneMonth(int year,int month,int kind){
+        int total = 0;
+        String sql = "select count(money) from accounttb where year = ? and month = ? and kind = ?";
+        Cursor cursor = db.rawQuery(sql, new String[]{year + "", month + "", kind + ""});
+        if (cursor.moveToFirst()) {
+            int count = cursor.getInt(cursor.getColumnIndex("count(money)"));
+            total = count;
+        }
+        return total;
+    }
     /**
      * 获取某一年的支出或者收入的总金额 kind:支出==0，收入==1
      */
