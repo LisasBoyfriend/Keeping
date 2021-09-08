@@ -1,6 +1,7 @@
 package com.yang.tally;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.graphics.Color;
@@ -10,11 +11,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.yang.tally.db.DBManager;
+import com.yang.tally.frag_chart.IncomeChartFragment;
+import com.yang.tally.frag_chart.OutcomeChartFragment;
 import com.yang.tally.utils.CalendarDialog;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class MonthChartActivity extends AppCompatActivity {
 
@@ -25,6 +30,9 @@ public class MonthChartActivity extends AppCompatActivity {
     private int month;
 
     int selectPos = -1,selectMonth = -1;
+    List<Fragment>chartFragList;
+    private IncomeChartFragment incomeChartFragment;
+    private OutcomeChartFragment outcomeChartFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +41,27 @@ public class MonthChartActivity extends AppCompatActivity {
         initView();
         initTime();
         initStatistics(year,month);
+        initFrag();
+    }
+
+    private void initFrag() {
+        chartFragList = new ArrayList<>();
+        //添加fragment对象
+        incomeChartFragment = new IncomeChartFragment();
+        outcomeChartFragment = new OutcomeChartFragment();
+        //添加数据到fragment当中
+        Bundle bundle = new Bundle();
+        bundle.putInt("year",year);
+        bundle.putInt("month",month);
+        incomeChartFragment.setArguments(bundle);
+        outcomeChartFragment.setArguments(bundle);
+        //将fragment添加到数据源当中
+        chartFragList.add(outcomeChartFragment);
+        chartFragList.add(incomeChartFragment);
+        //使用适配器
+
+
+
     }
 
     /**统计某年某月的收支情况数据
