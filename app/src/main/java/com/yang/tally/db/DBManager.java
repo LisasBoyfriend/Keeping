@@ -256,5 +256,33 @@ public class DBManager {
 
 
     }
+    /**
+     * 获取这个月当中某一天收入支出最大的金额，金额是多少
+     *
+     */
+    public static float getMaxMoneyOneDayInMonth(int year,int month,int kind){
+        String sql = "select sum(money) from accounttb where year=? and month=? and kind=? group by day order by sum(money) desc";
+        Cursor cursor = db.rawQuery(sql, new String[]{year + "", month + "", kind + ""});
+        if (cursor.moveToFirst()) {
+            float money = cursor.getFloat(cursor.getColumnIndex("sum(money)"));
+            return money;
+        }
+        return 0;
+    }
+    /**
+     * 根据指定月份获取每以日收入或者支出的总钱数的集合
+     */
+    public static List<BarChartItemBean>getSumMoneyOneDayInMonth(int year,int month,int kind){
+        String sql = "select day,sum(money) from accounttb where year=? and month=? and kind=? group by day";
+        Cursor cursor = db.rawQuery(sql, new String[]{year + "", month + "", kind + ""});
+        List<BarChartItemBean>list = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            int day = cursor.getInt(cursor.getColumnIndex("day"));
+            float sMoney = cursor.getFloat(cursor.getColumnIndex("sum(money)"));
+            BarChartItemBean itemBean = new BarChartItemBean(year, month, day, sMoney);
+            list.add(itemBean);
+        }
+        return list;
+    }
 
 }
