@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.yang.tally.adapter.ChartVPAdapter;
 import com.yang.tally.db.DBManager;
 import com.yang.tally.frag_chart.IncomeChartFragment;
 import com.yang.tally.frag_chart.OutcomeChartFragment;
@@ -33,6 +34,7 @@ public class MonthChartActivity extends AppCompatActivity {
     List<Fragment>chartFragList;
     private IncomeChartFragment incomeChartFragment;
     private OutcomeChartFragment outcomeChartFragment;
+    private ChartVPAdapter chartVPAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,16 @@ public class MonthChartActivity extends AppCompatActivity {
         initTime();
         initStatistics(year,month);
         initFrag();
+        setVPSelectListener();
+    }
+
+    private void setVPSelectListener() {
+        chartVp.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                setButtonStyle(position);
+            }
+        });
     }
 
     private void initFrag() {
@@ -60,6 +72,9 @@ public class MonthChartActivity extends AppCompatActivity {
         chartFragList.add(incomeChartFragment);
         //使用适配器
 
+        chartVPAdapter = new ChartVPAdapter(getSupportFragmentManager(),chartFragList);
+        chartVp.setAdapter(chartVPAdapter);
+        //将fragment加载到activity 当中
 
 
     }
@@ -109,9 +124,12 @@ public class MonthChartActivity extends AppCompatActivity {
                 break;
             case R.id.chart_btn_in:
                 setButtonStyle(1);
+                chartVp.setCurrentItem(1);
                 break;
             case R.id.chart_btn_out:
                 setButtonStyle(0);
+                chartVp.setCurrentItem(0);
+
                 break;
 
         }
@@ -130,6 +148,8 @@ public class MonthChartActivity extends AppCompatActivity {
                 MonthChartActivity.this.selectPos = selPos;
                 MonthChartActivity.this.selectMonth = month;
                 initStatistics(year,month);
+                incomeChartFragment.setDate(year,month);
+                outcomeChartFragment.setDate(year,month);
             }
         });
 

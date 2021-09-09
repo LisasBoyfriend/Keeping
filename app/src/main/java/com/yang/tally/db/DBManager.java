@@ -7,9 +7,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Icon;
 import android.util.Log;
 
+import com.yang.tally.utils.FloatUtils;
+
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.yang.tally.utils.FloatUtils.div;
 
 /**
  * 负责管理数据库的类
@@ -226,4 +231,30 @@ public class DBManager {
         String sql = "delete from accounttb";
         db.execSQL(sql);
     }
+
+    /**
+     * 查询指定年份和月份的收入或者支出每一种类型的总钱数
+     *
+     */
+    public static List<ChartItemBean>getChastListFromAccounttb(int year,int month,int kind){
+        List<ChartItemBean>list = new ArrayList<>();
+        float sumMoneyOneMonth = getSumMoneyOneMonth(year, month, kind);//求出支出或收入总钱数
+        String sql = "select typename,sImageId,sum(money) as total from accounttb where year = ? and month = ? and kind = ? group by typename " +
+                "order by total desc";
+        Cursor cursor = db.rawQuery(sql, new String[]{year + "", month + "", kind + ""});
+        while (cursor.moveToNext()) {
+            int sImageId = cursor.getInt(cursor.getColumnIndex("sImageId"));
+            String typename = cursor.getString(cursor.getColumnIndex("typename"));
+            float total = cursor.getFloat(cursor.getColumnIndex("total"));
+            //计算所占百分比 total/sumMonth
+
+            float ratio = FloatUtils.div(total,sumMoneyOneMonth);
+            ChartItemBean bean = new ChartItemBean(sImageId, typename, ratio, total);
+            list.add(bean);
+        }
+        return list;
+
+
+    }
+
 }
