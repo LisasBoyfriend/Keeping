@@ -12,6 +12,7 @@ import com.yang.tally.db.DBManager;
 
 public class SettingActivity extends AppCompatActivity {
 
+    private int da;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
