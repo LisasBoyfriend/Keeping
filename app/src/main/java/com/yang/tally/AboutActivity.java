@@ -7,8 +7,6 @@ import android.view.View;
 
 public class AboutActivity extends AppCompatActivity {
 
-    private int test;
-    private double a;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
