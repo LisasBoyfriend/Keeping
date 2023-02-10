@@ -1,117 +1,78 @@
-package com.yang.tally.utils;
+package com.yang.tally.utils
 
-import android.app.UiAutomation;
-import android.inputmethodservice.Keyboard;
-import android.inputmethodservice.KeyboardView;
-import android.text.Editable;
-import android.text.InputType;
-import android.view.View;
-import android.view.accessibility.AccessibilityEvent;
-import android.widget.EditText;
+import android.inputmethodservice.KeyboardView
+import android.widget.EditText
+import android.inputmethodservice.Keyboard
+import android.inputmethodservice.KeyboardView.OnKeyboardActionListener
+import android.text.Editable
+import android.text.InputType
+import android.view.View
+import com.yang.tally.R
 
-import com.yang.tally.R;
+class KeyBoardUtils(private val keyboardView: KeyboardView?, private val editText: EditText?) {
+    private val k1 //自定义的键盘
+            : Keyboard
+    private val visibility = 0
 
-public class KeyBoardUtils {
-
-    private KeyboardView keyboardView;
-    private final Keyboard k1; //自定义的键盘
-    private EditText editText;
-    private int visibility;
-
-    public interface OnEnsureListener{
-        public void onEnsure();
-
-    }
-    OnEnsureListener onEnsureListener;
-
-    public void setOnEnsureListener(OnEnsureListener onEnsureListener) {
-        this.onEnsureListener = onEnsureListener;
+    interface OnEnsureListener {
+        fun onEnsure()
     }
 
-    public KeyBoardUtils(KeyboardView keyboardView, EditText editText) {
-        this.keyboardView = keyboardView;
-        this.editText = editText;
-        this.editText.setInputType(InputType.TYPE_NULL);//取消弹出系统键盘
-        k1 = new Keyboard(this.editText.getContext(), R.xml.key);
-
-        this.keyboardView.setKeyboard(k1);//设置要显示的键盘的样式
-        this.keyboardView.setEnabled(true);
-        this.keyboardView.setPreviewEnabled(false);
-        this.keyboardView.setOnKeyboardActionListener(listener); //设置键盘按钮被点击的监听
+    var onEnsureListener: OnEnsureListener? = null
+    @JvmName("setOnEnsureListener1")
+    fun setOnEnsureListener(onEnsureListener: OnEnsureListener?) {
+        this.onEnsureListener = onEnsureListener
     }
 
-    KeyboardView.OnKeyboardActionListener listener = new KeyboardView.OnKeyboardActionListener() {
-        @Override
-        public void onPress(int primaryCode) {
-        }
-
-        @Override
-        public void onRelease(int primaryCode) {
-        }
-
-        @Override
-        public void onKey(int primaryCode, int[] keyCodes) {
-            Editable editable = editText.getText();
-            int start = editText.getSelectionStart();
-            switch (primaryCode) {
-                case Keyboard.KEYCODE_DELETE: //表示点击了删除键
-
-                    if(editable!=null&&editable.length()>0) {
-                    if(start>0){
-                        editable.delete(start-1,start);
+    var listener: OnKeyboardActionListener = object : OnKeyboardActionListener {
+        override fun onPress(primaryCode: Int) {}
+        override fun onRelease(primaryCode: Int) {}
+        override fun onKey(primaryCode: Int, keyCodes: IntArray) {
+            val editable = editText?.text
+            val start = editText?.selectionStart
+            when (primaryCode) {
+                Keyboard.KEYCODE_DELETE -> if (editable != null && editable.length > 0) {
+                    if (start != null) {
+                        if (start > 0) {
+                            editable.delete(start - 1, start)
+                        }
                     }
                 }
-                    break;
-                case Keyboard.KEYCODE_CANCEL://点击了清零
-                    editable.clear();
-                    break;
-                case Keyboard.KEYCODE_DONE://点击了完成
-                    onEnsureListener.onEnsure();//通过接口回调的方法，当点击确定时，可以调用这个方法
-                    break;
-                default://其他数字直接插入
-                    editable.insert(start,Character.toString((char)primaryCode));
+                Keyboard.KEYCODE_CANCEL -> editable!!.clear()
+                Keyboard.KEYCODE_DONE -> onEnsureListener!!.onEnsure() //通过接口回调的方法，当点击确定时，可以调用这个方法
+                else -> start?.let { editable!!.insert(it, Character.toString(primaryCode.toChar())) }
             }
         }
 
-        @Override
-        public void onText(CharSequence text) {
-
-        }
-
-        @Override
-        public void swipeLeft() {
-
-        }
-
-        @Override
-        public void swipeRight() {
-
-        }
-
-        @Override
-        public void swipeDown() {
-
-        }
-
-        @Override
-        public void swipeUp() {
-
-        }
-    };
+        override fun onText(text: CharSequence) {}
+        override fun swipeLeft() {}
+        override fun swipeRight() {}
+        override fun swipeDown() {}
+        override fun swipeUp() {}
+    }
 
     //显示键盘
-    public void showKeyboard(){
-        int visibility = keyboardView.getVisibility();
-        if (visibility == View.INVISIBLE||visibility==View.GONE){
-            keyboardView.setVisibility(View.VISIBLE);
+    fun showKeyboard() {
+        val visibility = keyboardView?.visibility
+        if (visibility == View.INVISIBLE || visibility == View.GONE) {
+            keyboardView?.visibility = View.VISIBLE
         }
     }
-    //隐藏键盘
-    public void hideKeyboard(){
-        int visibility = keyboardView.getVisibility();
-        if(visibility == View.VISIBLE ||visibility== View.INVISIBLE) {
-            keyboardView.setVisibility(View.GONE);
-        }
 
+    //隐藏键盘
+    fun hideKeyboard() {
+        val visibility = keyboardView?.visibility
+        if (visibility == View.VISIBLE || visibility == View.INVISIBLE) {
+            keyboardView?.visibility = View.GONE
+        }
+    }
+
+    init {
+        editText?.inputType = InputType.TYPE_NULL //取消弹出系统键盘
+        k1 = Keyboard(editText?.context, R.xml.key)
+        keyboardView?.keyboard = k1 //设置要显示的键盘的样式
+        keyboardView?.isEnabled = true
+        keyboardView?.isPreviewEnabled = false
+        keyboardView?.setOnKeyboardActionListener(listener) //设置键盘按钮被点击的监听
     }
 }

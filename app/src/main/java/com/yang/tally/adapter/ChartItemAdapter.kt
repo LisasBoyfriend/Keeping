@@ -1,82 +1,74 @@
-package com.yang.tally.adapter;
+package com.yang.tally.adapter
 
-import android.content.Context;
-import android.media.Image;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.content.Context
+import com.yang.tally.db.ChartItemBean
+import android.widget.BaseAdapter
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import com.yang.tally.R
+import com.yang.tally.utils.FloatUtils
+import android.widget.TextView
 
-import com.yang.tally.R;
-import com.yang.tally.db.ChartItemBean;
-import com.yang.tally.utils.FloatUtils;
-
-import java.util.List;
-
-public class ChartItemAdapter extends BaseAdapter {
-    LayoutInflater inflater;
+class ChartItemAdapter(
     /**
      * 账单详情页面ListView的适配器
      * @return
      */
-    Context context;
-    List<ChartItemBean> mDatas;
-
-    public ChartItemAdapter(Context context, List<ChartItemBean> mDatas) {
-        this.context = context;
-        this.mDatas = mDatas;
-        inflater = LayoutInflater.from(context);
+    var context: Context, var mDatas: List<ChartItemBean>?
+) : BaseAdapter() {
+    var inflater: LayoutInflater
+    override fun getCount(): Int {
+        return mDatas?.size!!
     }
 
-
-    @Override
-    public int getCount() {
-        return mDatas.size();
+    override fun getItem(position: Int): ChartItemBean? {
+        return mDatas?.get(position)
     }
 
-    @Override
-    public Object getItem(int position) {
-        return mDatas.get(position);
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
-        if (convertView == null){
-            convertView = inflater.inflate(R.layout.item_chartfrag_lv,parent,false);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
-        }else{
-            holder = (ViewHolder)convertView.getTag();
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
+        var convertView = convertView
+        var holder: ViewHolder? = null
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.item_chartfrag_lv, parent, false)
+            holder = ViewHolder(convertView)
+            convertView.tag = holder
+        } else {
+            holder = convertView.tag as ViewHolder
         }
         //获取显示内容
-        ChartItemBean bean = mDatas.get(position);
-        holder.iv.setImageResource(bean.getsImageId());
-        holder.typeTv.setText(bean.getType());
-        holder.totalTv.setText("￥ "+bean.getTotalMoney());
-
-        float radio = bean.getRadio();
-        String pert = FloatUtils.ratioToPercent(radio);
-        holder.ratioTv.setText(pert);
-
-        return convertView;
-
-    }
-    class ViewHolder{
-        TextView typeTv,ratioTv,totalTv;
-        ImageView iv;
-        public ViewHolder(View view){
-            typeTv = view.findViewById(R.id.item_chartfrag_tv_type);
-            ratioTv = view.findViewById(R.id.item_chartfrag_tv_pert);
-            totalTv = view.findViewById(R.id.item_chartfrag_tv_sum);
-            iv = view.findViewById(R.id.item_chartfrag_iv);
+        val bean = mDatas?.get(position)
+        bean?.let { holder!!.iv.setImageResource(it.sImageId) }
+        holder.typeTv.text = bean?.type
+        if (bean != null) {
+            holder.totalTv.text = "￥ " + bean.totalMoney
         }
+        val radio = bean?.radio
+        val pert = radio?.let { FloatUtils.ratioToPercent(it) }
+        holder.ratioTv.text = pert
+        return convertView
+    }
+
+    internal inner class ViewHolder(view: View) {
+        var typeTv: TextView
+        var ratioTv: TextView
+        var totalTv: TextView
+        var iv: ImageView
+
+        init {
+            typeTv = view.findViewById(R.id.item_chartfrag_tv_type)
+            ratioTv = view.findViewById(R.id.item_chartfrag_tv_pert)
+            totalTv = view.findViewById(R.id.item_chartfrag_tv_sum)
+            iv = view.findViewById(R.id.item_chartfrag_iv)
+        }
+    }
+
+    init {
+        inflater = LayoutInflater.from(context)
     }
 }

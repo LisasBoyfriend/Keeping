@@ -1,35 +1,21 @@
-package com.yang.tally.adapter;
+package com.yang.tally.adapter
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 
-import java.util.List;
-
-public class RecordPaperAdapter extends FragmentPagerAdapter {
-    List<Fragment>fragmentList;
-    String[]titles = {"支出","收入"};
-    public RecordPaperAdapter(@NonNull FragmentManager fm, List<Fragment>fragmentList){
-        super(fm);
-        this.fragmentList = fragmentList;
+class RecordPaperAdapter(fm: FragmentManager, var fragmentList: List<Fragment>) :
+    FragmentPagerAdapter(fm) {
+    var titles = arrayOf("支出", "收入")
+    override fun getItem(position: Int): Fragment {
+        return fragmentList[position]
     }
 
-    @NonNull
-    @Override
-    public Fragment getItem(int position) {
-        return fragmentList.get(position);
+    override fun getCount(): Int {
+        return fragmentList.size
     }
 
-    @Override
-    public int getCount() {
-        return fragmentList.size();
-    }
-
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return titles[position];
+    override fun getPageTitle(position: Int): CharSequence? {
+        return titles[position]
     }
 }

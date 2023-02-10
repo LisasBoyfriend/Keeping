@@ -1,35 +1,20 @@
-package com.yang.tally.adapter;
+package com.yang.tally.adapter
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 
-import java.util.List;
-
-public class ChartVPAdapter extends FragmentPagerAdapter {
-    List<Fragment>fragmentList;
-
-    public ChartVPAdapter(@NonNull FragmentManager fm, List<Fragment> fragmentList) {
-        super(fm);
-        this.fragmentList = fragmentList;
+class ChartVPAdapter(fm: FragmentManager, var fragmentList: List<Fragment>) :
+    FragmentPagerAdapter(fm) {
+    override fun getCount(): Int {
+        return fragmentList.size
     }
 
-
-    @Override
-    public int getCount() {
-        return fragmentList.size();
+    override fun getItem(position: Int): Fragment {
+        return fragmentList[position]
     }
 
-    @Override
-    public Fragment getItem(int position) {
-        return fragmentList.get(position);
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-
 }
